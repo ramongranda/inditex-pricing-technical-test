@@ -30,7 +30,7 @@ public class PriceApiControllerIT {
         Arguments.of("2020-06-14T10:00:00Z", 1, 35.50),
         Arguments.of("2020-06-14T16:00:00Z", 2, 25.45),
         Arguments.of("2020-06-14T21:00:00Z", 1, 35.50),
-        Arguments.of("2020-06-15T10:00:00Z", 3, 30.50),
+        Arguments.of("2020-06-15T10:00:00Z", 1, 35.50),
         Arguments.of("2020-06-16T21:00:00Z", 4, 38.95)
     );
   }

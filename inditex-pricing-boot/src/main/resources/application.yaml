@@ -26,8 +26,9 @@ logging:
   level:
     root: ${LOGGING_LEVEL_ROOT:INFO}
     com.inditex.pricing: ${LOGGING_APP:INFO}
-    org.hibernate.SQL: ${LOGGING_HIBERNATE_SQL:INFO}
+    org.hibernate.SQL: ${LOGGING_HIBERNATE_SQL:DEBUG}
     org.hibernate.type.descriptor.sql: ${LOGGING_HIBERNATE_TYPE_DESCRIPTOR:TRACE}
+    com.inditex.pricing.infrastructure.jpa: DEBUG
 im:
   aop:
     loggers:
@@ -59,18 +60,16 @@ spring:
     name: '@project.artifactId@'
 
   datasource:
-    url: jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE
+    url: jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'
     driverClassName: org.h2.Driver
     username: sa
     password:
-    hikari:
-      connectionInitSql: SET TIME ZONE '+01:00'   # H2 uses JVM timezone by default, set it to CET (Madrid timezone, no DST in tests)
 
   jpa:
     hibernate:
       ddl-auto: none
     properties:
-      jakarta.persistence.jdbc.time_zone: UTC  #Hibernate uses JVM timezone by default, set it to UTC
+      hibernate.jdbc.time_zone: Europe/Madrid
     show-sql: true
     open-in-view: false
 

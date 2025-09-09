@@ -4,6 +4,8 @@ package com.inditex.pricing.infrastructure.jpa;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import im.aop.loggers.Level;
+import im.aop.loggers.advice.before.LogBefore;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +24,7 @@ public interface PriceJpaRepository extends JpaRepository<PriceEntity, Long> {
    * @param at the specific date and time
    * @return an Optional containing the best matching PriceEntity, if found
    */
+  @LogBefore(level = Level.DEBUG)
   @Query(nativeQuery = true, name = "PriceEntity.findBest")
   Optional<PriceEntity> findBest(@NotNull @Param("brandId") Integer brandId, @NotNull @Param("productId") Integer productId,
       @NotNull @Param("at") LocalDateTime at);

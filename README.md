@@ -73,7 +73,7 @@ Swagger UI is provided by **springdoc** and is exposed at `/openapi/ui`.
   * `START_DATE` / `END_DATE` → `TIMESTAMP`
 * **Time zone policy:**
 
-  * **Database session:** assumed **GMT+1 (+01:00)** (MariaDB/H2 session time zone).
+  * **Database session:** assumed **Spain peninsular time (Europe/Madrid, GMT+1 or GMT+2 depending on daylight saving time)** (MariaDB/H2 session time zone).
   * **Application & REST:** **UTC** (ISO‑8601, e.g., `2020-06-14T10:00:00Z`).
   * Hibernate reads/writes temporal values in UTC; session time zone at the DB ensures comparisons against `TIMESTAMP` behave as if data
     were in GMT+1.
@@ -101,13 +101,13 @@ Key settings (can be overridden via environment variables):
 If you use a file-based H2 URL, the console JDBC URL typically is:
 
 ```
-jdbc:h2:file:./data/prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+jdbc:h2:file:./data/prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'
 ```
 
 For in-memory:
 
 ```
-jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'
 ```
 
 ---
@@ -133,7 +133,7 @@ curl -i http://localhost:8081/actuator/health
 * OpenAPI JSON → `http://localhost:8081/openapi/api-docs`
 * H2 Console → `http://localhost:8081/h2-console`
 
-  * JDBC URL (memory): `jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1`
+  * JDBC URL (memory): `jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'`
   * User: `sa` — Password: *(empty unless configured)*
 
 ---
@@ -146,13 +146,13 @@ The test loads the full Spring context (REST API, mappers, persistence with H2 i
 
 The expected results come from the following logic:
 
-| **Case** | **applicationDate (UTC)** | **Expected priceList** | **Expected price** | **Reason**                                             |
-|----------|---------------------------|------------------------|--------------------|--------------------------------------------------------|
-| 1        | 2020-06-14T10:00:00Z      | 1                      | 35.50              | Only tariff 1 is valid at that time.                   |
-| 2        | 2020-06-14T16:00:00Z      | 2                      | 25.45              | Tariffs 1 and 2 overlap, tariff 2 has higher priority. |
-| 3        | 2020-06-14T21:00:00Z      | 1                      | 35.50              | Tariff 2 has expired, only tariff 1 is valid.          |
-| 4        | 2020-06-15T10:00:00Z      | 3                      | 30.50              | Tariffs 1 and 3 overlap, tariff 3 has higher priority. |
-| 5        | 2020-06-16T21:00:00Z      | 4                      | 38.95              | Tariffs 1 and 4 overlap, tariff 4 has higher priority. |
+| **Case** | **applicationDate (UTC)** | **Expected priceList** | **Expected price** | **Reason**                                                      |
+|----------|---------------------------|------------------------|--------------------|-----------------------------------------------------------------|
+| 1        | 2020-06-14T10:00:00Z      | 1                      | 35.50              | Only tariff 1 is valid at that time.                            |
+| 2        | 2020-06-14T16:00:00Z      | 2                      | 25.45              | Tariffs 1 and 2 overlap, tariff 2 has higher priority.          |
+| 3        | 2020-06-14T21:00:00Z      | 1                      | 35.50              | Tariff 2 has expired, only tariff 1 is valid.                   |
+| 4        | 2020-06-15T10:00:00Z      | 1                      | 35.50              | Tariff 3 has expired at 11:00 Europe/Madrid; tariff 1 is valid. |
+| 5        | 2020-06-16T21:00:00Z      | 4                      | 38.95              | Tariffs 1 and 4 overlap, tariff 4 has higher priority.          |
 
 The rule applied is:
 

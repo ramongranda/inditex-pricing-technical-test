@@ -36,7 +36,8 @@ public class PriceQueryJpaAdapter implements PriceQueryPort {
   @Override
   @LogBefore(level = Level.DEBUG)
   public Optional<Price> findApplicable(@NotNull final Integer brandId, @NotNull final Integer productId, @NotNull final Instant at) {
-    return this.priceJpaRepository.findBest(brandId, productId, LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid")))
+    LocalDateTime atDb = LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid"));
+    return this.priceJpaRepository.findBest(brandId, productId, atDb)
         .map(this.priceEntityMapper::toModel);
   }
 }
