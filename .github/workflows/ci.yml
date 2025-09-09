@@ -39,13 +39,22 @@ jobs:
       - name: Build reactor (compile + test)
         run: mvn -B -fae clean verify
 
+      - name: Inspect classes & execs
+        run: |
+          echo "== CLASSES =="
+          find . -type d -path '*/target/classes' -maxdepth 0 -print | sed 's|^|  |'
+          echo "== TEST-CLASSES =="
+          find . -type d -path '*/target/test-classes' -maxdepth 0 -print | sed 's|^|  |'
+          echo "== JACOCO .exec FILES (size) =="
+          find . -name 'jacoco*.exec' -printf '%10s  %p\n' | sort -nr | head -n 50 || true
+
       - name: Aggregate JaCoCo (root only)
         run: mvn -B -N jacoco:report-aggregate
 
-      - name: Inspect coverage file
+      - name: Inspect JaCoCo aggregate XML
         run: |
           ls -lh target/site/jacoco-aggregate/jacoco.xml || true
-          head -n 20 target/site/jacoco-aggregate/jacoco.xml || true
+          grep -m1 '<counter type="INSTRUCTION"' -n target/site/jacoco-aggregate/jacoco.xml || true
 
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')

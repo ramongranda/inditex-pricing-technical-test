@@ -51,8 +51,8 @@
     <instancio.version>5.0.2</instancio.version>
 
     <!-- Plugins -->
-    <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
+    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
     <openapi.generator.version>7.15.0</openapi.generator.version>
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
@@ -377,9 +377,6 @@
             <id>jacoco-report-aggregate</id>
             <goals><goal>report-aggregate</goal></goals>
             <inherited>false</inherited>
-            <configuration>
-              <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
-            </configuration>
           </execution>
         </executions>
       </plugin>
