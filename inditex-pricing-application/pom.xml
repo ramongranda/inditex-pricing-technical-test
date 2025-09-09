@@ -19,14 +19,6 @@
     for code generation, and testing libraries to ensure application reliability
   </description>
 
-  <properties>
-    <sonar.skip>false</sonar.skip>
-    <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
-    <sonar.java.binaries>target/classes</sonar.java.binaries>
-    <sonar.sources>src/main/java</sonar.sources>
-    <sonar.tests>src/test/java</sonar.tests>
-  </properties>
-
   <dependencies>
     <!-- Modules -->
     <dependency>

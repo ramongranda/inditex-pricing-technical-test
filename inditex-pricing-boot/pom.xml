@@ -16,15 +16,6 @@
   <name>inditex-pricing-boot</name>
   <description>Spring Boot module for Inditex Pricing Technical Test</description>
 
-  <properties>
-    <sonar.skip>false</sonar.skip>
-    <sonar.junit.reportPaths>target/failsafe-reports</sonar.junit.reportPaths>
-    <sonar.java.binaries>target/classes</sonar.java.binaries>
-    <sonar.sources>src/main/java</sonar.sources>
-    <sonar.tests>src/test/java</sonar.tests>
-  </properties>
-
-
   <dependencies>
 
     <!-- Modules -->
