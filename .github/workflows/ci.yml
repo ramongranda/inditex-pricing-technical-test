@@ -40,7 +40,9 @@ jobs:
       - name: Build & Test (JaCoCo aggregate)
         run: mvn -B clean verify
 
-
+      - name: Check JaCoCo XML
+        run: ls -l target/site/jacoco-aggregate/jacoco.xml
+        
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
         run: |
