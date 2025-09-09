@@ -2,11 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.4.4</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath/>
   </parent>
 
   <groupId>com.inditex.pricing</groupId>
@@ -15,24 +16,7 @@
   <packaging>pom</packaging>
 
   <name>inditex-pricing-technical-test</name>
-  <description>This module serves as the entry point for the Inditex Pricing Technical Test project. It assembles all layers, configures
-    Spring Boot, and manages application startup. The module includes dependencies for the API, domain, application, infrastructure, and
-    REST API modules, ensuring seamless integration and execution.
-  </description>
-
-  <url />
-  <licenses>
-    <license />
-  </licenses>
-  <developers>
-    <developer />
-  </developers>
-  <scm>
-    <connection />
-    <developerConnection />
-    <tag />
-    <url />
-  </scm>
+  <description>Root multi-module for Inditex Pricing Technical Test</description>
 
   <modules>
     <module>inditex-pricing-domain</module>
@@ -44,76 +28,55 @@
   </modules>
 
   <properties>
-    <!-- Java version -->
+    <!-- Java -->
     <java.version>21</java.version>
-    <java.compiler.fork>true</java.compiler.fork>
-    <java.compiler.version>21</java.compiler.version>
-
-    <!-- Maven -->
-    <maven.version>3.9.9</maven.version>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
-    <maven.build.timestamp.format>yyyyMMdd_HHmm</maven.build.timestamp.format>
 
-    <!-- Project encoding -->
-    <default.encoding>UTF-8</default.encoding>
+    <!-- Encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <!-- Spring Boot and dependencies versions -->
+    <!-- Versions -->
     <spring.boot.version>3.4.4</spring.boot.version>
     <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
-
-    <!-- Other dependencies versions -->
     <mapstruct.version>1.6.2</mapstruct.version>
     <lombok.version>1.18.34</lombok.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <swagger-annotations-jakarta.version>2.2.25</swagger-annotations-jakarta.version>
     <jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
     <im-aop-loggers.version>1.2.0</im-aop-loggers.version>
-
-    <!-- Test dependencies versions -->
     <instancio.version>5.0.2</instancio.version>
 
-    <!-- Maven plugins versions -->
+    <!-- Plugins -->
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
     <openapi.generator.version>7.15.0</openapi.generator.version>
-    <junit-platform-launcher.version>1.11.4</junit-platform-launcher.version>
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
     <maven-checkstyle-plugin.version>3.2.2</maven-checkstyle-plugin.version>
     <spotbugs-maven-plugin.version>4.8.6.3</spotbugs-maven-plugin.version>
-    <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
     <sonar-maven.version>3.9.1.2184</sonar-maven.version>
     <jacoco-maven.version>0.8.13</jacoco-maven.version>
-    <bud.argLine>-javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar</bud.argLine>
-    <skipITs>false</skipITs>
 
-    <!-- SonarQube general -->
+    <!-- ByteBuddy agent (Mockito inline) -->
+    <bud.argLine>-javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar</bud.argLine>
+
+    <!-- Sonar -->
     <sonar.java.source>21</sonar.java.source>
     <sonar.language>java</sonar.language>
-    <sonar.java.binaries>target/classes</sonar.java.binaries>
-    <sonar.sources>src/main/java</sonar.sources>
-    <sonar.tests>src/test/java</sonar.tests>
-    <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
-    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.java.binaries>**/target/classes</sonar.java.binaries>
+    <sonar.sources>**/src/main/java</sonar.sources>
+    <sonar.tests>**/src/test/java</sonar.tests>
+    <sonar.junit.reportPaths>**/target/surefire-reports</sonar.junit.reportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.scm.provider>git</sonar.scm.provider>
-    <!-- Exclusions de análisis -->
-    <sonar.exclusions>
-      **/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**
-    </sonar.exclusions>
-    <sonar.coverage.exclusions>**/*Exception.java,**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java
-    </sonar.coverage.exclusions>
-    <sonar.cpd.exclusions>**/*Test*.java,**/*IT.java,**/*MapperImpl.java,**/domain/**,**/*Mapper.java
-    </sonar.cpd.exclusions>
-
+    <sonar.exclusions>**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**</sonar.exclusions>
+    <sonar.coverage.exclusions>**/*Exception.java,**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**</sonar.coverage.exclusions>
+    <sonar.cpd.exclusions>**/*Test*.java,**/*IT.java,**/*MapperImpl.java,**/domain/**,**/*Mapper.java</sonar.cpd.exclusions>
   </properties>
-
-  <dependencies />
 
   <dependencyManagement>
     <dependencies>
@@ -123,44 +86,40 @@
         <artifactId>inditex-pricing-application</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inditex-pricing-domain</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inditex-pricing-api-contract</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inditex-pricing-rest-api</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inditex-pricing-infrastructure</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inditex-pricing-boot</artifactId>
         <version>${project.version}</version>
       </dependency>
 
-      <!-- Spring Boot dependencies -->
+      <!-- Springdoc -->
       <dependency>
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        <version>${springdoc.version}</version>
+        <version>${springdoc-openapi.version}</version>
       </dependency>
 
+      <!-- Swagger annotations -->
       <dependency>
         <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-annotations-jakarta</artifactId>
@@ -174,63 +133,46 @@
         <version>${jakarta.validation-api.version}</version>
       </dependency>
 
-
-      <!-- Other dependencies -->
+      <!-- Others -->
       <dependency>
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${mapstruct.version}</version>
       </dependency>
-
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
         <optional>true</optional>
       </dependency>
-
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok-mapstruct-binding</artifactId>
         <version>${lombok-mapstruct-binding.version}</version>
         <scope>provided</scope>
       </dependency>
-
       <dependency>
         <groupId>org.openapitools</groupId>
         <artifactId>jackson-databind-nullable</artifactId>
         <version>${jackson-databind-nullable.version}</version>
       </dependency>
-
-
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-collections4</artifactId>
         <version>${commons-collections4.version}</version>
       </dependency>
-
-      <!-- im-aop-loggers -->
       <dependency>
         <groupId>com.github.andylke</groupId>
         <artifactId>im-aop-loggers</artifactId>
         <version>${im-aop-loggers.version}</version>
       </dependency>
-
-      <!-- Testing dependencies -->
+      <!-- Testing -->
       <dependency>
         <groupId>org.instancio</groupId>
         <artifactId>instancio-junit</artifactId>
         <version>${instancio.version}</version>
         <scope>test</scope>
       </dependency>
-
-      <dependency>
-        <groupId>org.junit.platform</groupId>
-        <artifactId>junit-platform-launcher</artifactId>
-        <version>${junit-platform-launcher.version}</version>
-        <scope>test</scope>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
 
@@ -238,9 +180,11 @@
     <finalName>${project.artifactId}-${project.version}</finalName>
     <pluginManagement>
       <plugins>
+        <!-- compiler -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.11.0</version>
           <configuration>
             <release>${java.version}</release>
             <annotationProcessorPaths>
@@ -261,25 +205,15 @@
               </path>
             </annotationProcessorPaths>
             <compilerArgs>
-              <arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
-              <arg>-Amapstruct.suppressGeneratorVersionInfoComment=true</arg>
               <arg>-Amapstruct.defaultComponentModel=spring</arg>
             </compilerArgs>
           </configuration>
         </plugin>
+        <!-- spring-boot plugin -->
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring.boot.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.openapitools</groupId>
-          <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>${openapi.generator.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
           <configuration>
             <excludes>
               <exclude>
@@ -301,127 +235,25 @@
     </pluginManagement>
 
     <plugins>
-
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless-maven-plugin.version}</version>
-        <configuration>
-          <java>
-            <cleanthat />
-            <importOrder>
-              <wildcardsLast>false</wildcardsLast>
-              <order>\#,static,java,com.inditex,*</order>
-              <semanticSort>false</semanticSort>
-            </importOrder>
-            <removeUnusedImports />
-            <eclipse>
-              <file>${maven.multiModuleProjectDirectory}/src/main/config/eclipse-java-google-style.xml</file>
-              <version>4.21</version>
-            </eclipse>
-            <lineEndings>UNIX</lineEndings>
-          </java>
-          <groovy>
-            <importOrder />
-            <prettier>
-              <devDependencies>
-                <prettier>2.8.8</prettier>
-                <prettier-plugin-java>2.3.0</prettier-plugin-java>
-              </devDependencies>
-              <config>
-                <parser>java</parser>
-                <printWidth>100</printWidth>
-                <tabWidth>4</tabWidth>
-              </config>
-            </prettier>
-          </groovy>
-        </configuration>
-        <executions>
-          <execution>
-            <id>check-code-style</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <phase>validate</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>${maven-enforcer-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>enforce-banned-dependencies</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <phase>validate</phase>
-            <configuration>
-              <rules>
-                <requireMavenVersion>
-                  <version>[${maven.version},)</version>
-                </requireMavenVersion>
-                <requireJavaVersion>
-                  <version>${java.version}</version>
-                </requireJavaVersion>
-                <bannedDependencies>
-                  <excludes>
-                    <exclude>log4j:log4j</exclude>
-                    <exclude>commons-logging:commons-logging</exclude>
-                  </excludes>
-                </bannedDependencies>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle-plugin.version}</version>
-        <configuration>
-          <configLocation>${maven.multiModuleProjectDirectory}/src/main/config/checkstyle-java-google-style.xml</configLocation>
-          <suppressionsLocation>${maven.multiModuleProjectDirectory}/src/main/config/checkstyle-suppressions.xml</suppressionsLocation>
-          <consoleOutput>true</consoleOutput>
-          <failsOnError>true</failsOnError>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${spotbugs-maven-plugin.version}</version>
-        <configuration>
-          <htmlOutput>true</htmlOutput>
-          <excludeFilterFile>${maven.multiModuleProjectDirectory}/src/main/config/spotbugs-exclude.xml</excludeFilterFile>
-        </configuration>
-      </plugin>
+      <!-- Surefire -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <useModulePath>false</useModulePath>
-          <argLine>${argLine} ${bud.argLine}</argLine>
+          <argLine>${argLine} -XX:+EnableDynamicAgentLoading -Djdk.attach.allowAttachSelf=true -Xshare:off ${bud.argLine}</argLine>
           <includes>
-            <include>**/*Spec.*</include>
             <include>**/*Test.*</include>
+            <include>**/*Spec.*</include>
           </includes>
           <excludes>
             <exclude>**/*IT.java</exclude>
           </excludes>
         </configuration>
       </plugin>
+
+      <!-- Failsafe -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -435,72 +267,48 @@
           </execution>
         </executions>
         <configuration>
-          <skipITs>${skipITs}</skipITs>
           <includes>
             <include>**/*IT.*</include>
-            <include>**/*Cucumber*.java</include>
           </includes>
         </configuration>
       </plugin>
+
+      <!-- JaCoCo -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${jacoco-maven.version}</version>
         <executions>
-          <!-- Para Surefire -->
           <execution>
-            <id>jacoco-initialize</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <!-- Para Failsafe -->
-          <execution>
-            <id>jacoco-initialize-integration</id>
-            <goals>
-              <goal>prepare-agent-integration</goal>
-            </goals>
+            <id>jacoco-prepare-agent</id>
+            <goals><goal>prepare-agent</goal></goals>
           </execution>
           <execution>
-            <id>jacoco-site</id>
-            <phase>package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
+            <id>jacoco-report-aggregate</id>
+            <phase>verify</phase>
+            <goals><goal>report-aggregate</goal></goals>
             <configuration>
-              <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-              <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
-              <excludes>
-                <exclude>**/*DTO.*</exclude>
-                <exclude>**/*Dto.*</exclude>
-                <exclude>**/*.md</exclude>
-                <exclude>**/*MapperImpl.java</exclude>
-                <exclude>**/config/**</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jacoco-report-xml</id>
-            <phase>package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+              <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
             </configuration>
           </execution>
         </executions>
       </plugin>
+
+      <!-- Sonar -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
         <version>${sonar-maven.version}</version>
       </plugin>
-
     </plugins>
   </build>
 
-  <reporting />
-  <profiles />
-
+  <profiles>
+    <profile>
+      <id>sonar</id>
+      <properties>
+        <!-- override sonar.host.url / sonar.login in CI -->
+      </properties>
+    </profile>
+  </profiles>
 </project>
