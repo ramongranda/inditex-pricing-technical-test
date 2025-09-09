@@ -67,10 +67,10 @@
     <!-- Sonar -->
     <sonar.java.source>21</sonar.java.source>
     <sonar.language>java</sonar.language>
-    <sonar.java.binaries>**/target/classes</sonar.java.binaries>
-    <sonar.sources>**/src/main/java</sonar.sources>
-    <sonar.tests>**/src/test/java</sonar.tests>
-    <sonar.junit.reportPaths>**/target/surefire-reports</sonar.junit.reportPaths>
+    <sonar.java.binaries>target/classes</sonar.java.binaries>
+    <sonar.sources>src/main/java</sonar.sources>
+    <sonar.tests>src/test/java</sonar.tests>
+    <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.scm.provider>git</sonar.scm.provider>
     <sonar.exclusions>**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**</sonar.exclusions>
