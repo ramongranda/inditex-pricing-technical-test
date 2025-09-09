@@ -37,11 +37,11 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Build & Test (JaCoCo aggregate)
+      - name: Build & Test
         run: mvn -B clean verify
 
       - name: JaCoCo aggregate (run only in parent)
-        run: mvn -B -pl :inditex-pricing-technical-test -am=false jacoco:report-aggregate
+        run: mvn -B -N jacoco:report-aggregate
 
       - name: Check JaCoCo XML
         run: ls -lh target/site/jacoco-aggregate/jacoco.xml && head -n 20 target/site/jacoco-aggregate/jacoco.xml
