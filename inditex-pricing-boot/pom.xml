@@ -14,7 +14,11 @@
   <packaging>jar</packaging>
 
   <name>inditex-pricing-boot</name>
-  <description></description>
+  <description>Spring Boot module for Inditex Pricing Technical Test</description>
+
+  <properties>
+    <sonar.junit.reportPaths>target/surefire-reports,target/failsafe-reports</sonar.junit.reportPaths>
+  </properties>
 
 
   <dependencies>
