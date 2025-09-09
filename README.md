@@ -1,3 +1,14 @@
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.x-brightgreen)
+![Hexagonal Architecture](https://img.shields.io/badge/Hexagonal-Architecture-orange)
+![Maven](https://img.shields.io/badge/Build-Maven-blueviolet)
+![DDD](https://img.shields.io/badge/DDD-Domain--Driven--Design-blueviolet)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
+
 # Inditex Pricing – Technical Test
 
 Pricing service for Inditex built with **Spring Boot 3**, **Hexagonal Architecture**, **OpenAPI (contract-first)** and **H2 in MariaDB mode**.
@@ -39,7 +50,7 @@ inditex-pricing-technical-test/
  └─ inditex-pricing-boot/              # Boot module (Spring Boot app + config + DB init scripts)
 ```
 
-**Flow:** Client → REST (delegate) → Inbound Port (application) → Domain → Outbound Port → Infrastructure.
+**Flow:** Client → REST (delegate) → Inbound Port (application) ��� Domain → Outbound Port → Infrastructure.
 
 ---
 
@@ -74,7 +85,7 @@ Swagger UI is provided by **springdoc** and is exposed at `/openapi/ui`.
 * **Time zone policy:**
 
   * **Database session:** assumed **Spain peninsular time (Europe/Madrid, GMT+1 or GMT+2 depending on daylight saving time)** (MariaDB/H2 session time zone).
-  * **Application & REST:** **UTC** (ISO‑8601, e.g., `2020-06-14T10:00:00Z`).
+  * **Application & REST:** **UTC** (ISO���8601, e.g., `2020-06-14T10:00:00Z`).
   * Hibernate reads/writes temporal values in UTC; session time zone at the DB ensures comparisons against `TIMESTAMP` behave as if data
     were in GMT+1.
 
