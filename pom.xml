@@ -375,8 +375,8 @@
           </execution>
           <execution>
             <id>jacoco-report-aggregate</id>
-            <phase>verify</phase>
             <goals><goal>report-aggregate</goal></goals>
+            <inherited>false</inherited>
             <configuration>
               <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
             </configuration>
