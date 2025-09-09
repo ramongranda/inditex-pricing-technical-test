@@ -48,4 +48,5 @@ public class PriceApiControllerIT {
         .andExpect(jsonPath("$.price").value(closeTo(expectedPrice, 0.0001)))
         .andExpect(jsonPath("$.curr").value("EUR"));
   }
+
 }
