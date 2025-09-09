@@ -67,9 +67,6 @@
     <!-- Sonar -->
     <sonar.java.source>21</sonar.java.source>
     <sonar.language>java</sonar.language>
-    <sonar.java.binaries>target/classes</sonar.java.binaries>
-    <sonar.sources>src/main/java</sonar.sources>
-    <sonar.tests>src/test/java</sonar.tests>
     <sonar.java.lombok.enabled>true</sonar.java.lombok.enabled>
     <sonar.java.lombok.config>${project.basedir}/lombok.config</sonar.java.lombok.config>
     <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
