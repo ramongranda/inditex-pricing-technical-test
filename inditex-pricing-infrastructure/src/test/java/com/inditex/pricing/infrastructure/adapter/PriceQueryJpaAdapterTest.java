@@ -3,6 +3,7 @@ package com.inditex.pricing.infrastructure.adapter;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -57,9 +58,9 @@ class PriceQueryJpaAdapterTest {
         .set(field("curr"), "EUR") // ISO 4217 alpha-3
         .create();
     Mockito.when(priceJpaRepository.findBest(
-        Mockito.eq(brandId),
-        Mockito.eq(productId),
-        Mockito.eq(LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid")))
+        brandId,
+        productId,
+        LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid"))
     )).thenReturn(Optional.of(priceEntity));
 
     // Act
@@ -68,6 +69,11 @@ class PriceQueryJpaAdapterTest {
     // Assert
     assertTrue(result.isPresent());
     assertNotNull(result.get());
+    verify(priceJpaRepository).findBest(
+        brandId,
+        productId,
+        LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid"))
+    );
   }
 
   @Test
@@ -77,9 +83,7 @@ class PriceQueryJpaAdapterTest {
     Integer productId = Instancio.create(Integer.class);
     Instant at = Instancio.create(Instant.class);
     Mockito.when(priceJpaRepository.findBest(
-        Mockito.eq(brandId),
-        Mockito.eq(productId),
-        Mockito.eq(LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid")))
+        brandId, productId, LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid"))
     )).thenReturn(Optional.empty());
 
     // Act
@@ -87,5 +91,8 @@ class PriceQueryJpaAdapterTest {
 
     // Assert
     assertTrue(result.isEmpty());
+    verify(priceJpaRepository).findBest(
+        brandId, productId, LocalDateTime.ofInstant(at, ZoneId.of("Europe/Madrid"))
+    );
   }
 }
