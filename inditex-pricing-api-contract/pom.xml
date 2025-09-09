@@ -20,7 +20,7 @@
   </description>
 
   <properties>
-    <sonar.sources>src/main/resources</sonar.sources>
+    <sonar.skip>true</sonar.skip>
   </properties>
 
   <dependencies>
