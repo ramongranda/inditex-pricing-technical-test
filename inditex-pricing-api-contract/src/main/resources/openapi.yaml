@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Inditex Pricing API
+  description: Technical test – pricing service for Inditex using Spring Boot, hexagonal architecture and OpenAPI
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8081
+    description: Local server
+tags:
+  - name: Prices
+    description: Operations related to product prices
+
+paths:
+  /prices:
+    get:
+      summary: Get applicable price for a product and brand at a given date
+      operationId: getPrices
+      tags: [ Prices ]
+      parameters:
+        - in: query
+          name: applicationDate
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Date and time of the price application in UTC. Format ISO-8601 (e.g. `2020-06-14T10:00:00Z`)
+        - in: query
+          name: productId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+          description: Unique identifier of the product (INT, max 2,147,483,647).
+        - in: query
+          name: brandId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 32767
+          description: Unique identifier of the brand (SMALLINT, max 32,767).
+      responses:
+        '200':
+          description: Price found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    ProblemDetail:
+      $ref: './common/problem-detail.yaml'
+    Price:
+      $ref: './price/price.yaml'
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    InternalServerError:
+      description: Internal server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'

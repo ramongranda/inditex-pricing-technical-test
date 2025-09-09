@@ -1,0 +1,38 @@
+title: Problem Details Error
+type: object
+description: An object to provide explicit details on a problem towards an API consumer.
+properties:
+  detail:
+    type: string
+    description: "A granular description on the specific error related to a body property, query parameter, path parameters, and/or header."
+    maxLength: 4096
+  pointer:
+    type: string
+    description: "A JSON Pointer to a specific request body property that is the source of error."
+    maxLength: 1024
+  parameter:
+    type: string
+    description: "The name of the query or path parameter that is the source of error."
+    maxLength: 1024
+  header:
+    type: string
+    description: "The name of the header that is the source of error."
+    maxLength: 1024
+  code:
+    type: string
+    description: "A string containing additional provider specific codes to identify the error context."
+    maxLength: 50
+additionalProperties: false
+required:
+  - detail
+example:
+  detail: "The input provided is invalid."
+  pointer: "/username"
+  parameter: "username"
+  header: "X-Custom-Header"
+  code: "INVALID_INPUT"
+  errors:
+    - field: "username"
+      message: "Username is required."
+    - field: "email"
+      message: "Email format is invalid."

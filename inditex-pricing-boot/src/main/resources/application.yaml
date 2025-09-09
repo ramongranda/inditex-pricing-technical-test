@@ -1,0 +1,105 @@
+server:
+  servlet:
+    context-path: /
+  port: ${SERVER_PORT:8081}
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+      - application/xml
+      - text/plain
+      - application/pdf
+    min-response-size: 1024
+  http2:
+    enabled: true
+  tomcat:
+    connection-timeout: ${TOMCAT_CONNECTION_TIMEOUT:2s}
+    keep-alive-timeout: ${TOMCAT_KEEP_ALIVE_TIMEOUT:10s}
+    threads:
+      max: ${TOMCAT_THREADS_MAX:200}
+      min-spare: ${TOMCAT_THREADS_MIN_SPARE:100}
+  shutdown: graceful
+
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{15}) - [${spring.application.name:},%X{traceId:-}] - %msg%n'
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.inditex.pricing: ${LOGGING_APP:INFO}
+    org.hibernate.SQL: ${LOGGING_HIBERNATE_SQL:INFO}
+    org.hibernate.type.descriptor.sql: ${LOGGING_HIBERNATE_TYPE_DESCRIPTOR:TRACE}
+im:
+  aop:
+    loggers:
+      enabled: true
+      entering-level: INFO
+      entering-message: "Entering [{method}] with parameters [{parameters}]"
+      exited-level: INFO
+      exited-message: "[{method}] exited normally with return value [{return-value}]"
+      exited-abnormally-level: ERROR
+      exited-abnormally-message: "[{method}] exited abnormally with exception [{exception}]"
+      ignore-exceptions:
+        - jakarta.validation.ConstraintViolationException
+      print-stack-trace: true
+      elapsed-level: INFO
+      elapsed-message: "[{method}] elapsed [{elapsed}]"
+      elapsed-warning-level: WARN
+      elapsed-warning-message: "[{method}] reached elapsed time limit [{elapsed-time-limit}]"
+      reflection-to-string:
+        base-classes:
+        exclude-null-values: true
+        exclude-field-names:
+          - username
+          - password
+          - passphrase
+          - secret
+          - token
+spring:
+  application:
+    name: '@project.artifactId@'
+
+  datasource:
+    url: jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      connectionInitSql: SET TIME ZONE '+01:00'   # H2 uses JVM timezone by default, set it to CET (Madrid timezone, no DST in tests)
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      jakarta.persistence.jdbc.time_zone: UTC  #Hibernate uses JVM timezone by default, set it to UTC
+    show-sql: true
+    open-in-view: false
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+      continue-on-error: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+    enabled: ${SPRINGDOC_ENABLED:true}
+    path: ${SPRINGDOC_API_DOCS_PATH:/openapi/api-docs}
+    groups:
+      enabled: false
+  swagger-ui:
+    enabled: ${SPRINGDOC_ENABLED:true}
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/openapi/ui}
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+  model-converters:
+    pageable-converter:
+      enabled: false

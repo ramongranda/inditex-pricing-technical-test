@@ -1,0 +1,51 @@
+title: Problem Details Error
+type: object
+required:
+    - productId
+    - brandId
+    - priceList
+    - startDate
+    - endDate
+    - price
+    - curr
+properties:
+    productId:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      example: 35455
+      description: Unique identifier of the product.
+    brandId:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      example: 1
+      description: Unique identifier of the brand.
+    priceList:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      example: 2
+      description: Identifier of the applicable price list.
+    startDate:
+      type: string
+      format: date-time
+      example: 2020-06-14T15:00:00Z
+      description: Start date and time of the price validity period, in UTC. Format ISO-8601.
+    endDate:
+      type: string
+      format: date-time
+      example: 2020-06-14T18:30:00Z
+      description: End date and time of the price validity period, in UTC. Format ISO-8601.
+    price:
+      type: number
+      format: double
+      minimum: 0.0
+      example: 25.45
+      description: Final price to apply. Value in the specified currency.
+    curr:
+      type: string
+      minLength: 3
+      maxLength: 3
+      example: EUR
+      description: Currency of the price, using ISO-4217 alpha-3 codes (e.g. EUR, USD, GBP).

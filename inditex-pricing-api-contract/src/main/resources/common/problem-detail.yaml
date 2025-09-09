@@ -1,0 +1,57 @@
+title: Problem Details
+type: object
+description: |
+  A Problem Details object (RFC 9457).
+
+  Additional properties specific to the problem type may be present.
+  See: https://datatracker.ietf.org/doc/html/rfc9457
+properties:
+  type:
+    type: string
+    format: uri
+    description: A URI reference that identifies the problem type.
+    maxLength: 1024
+  status:
+    type: integer
+    format: int32
+    minimum: 100
+    maximum: 599
+    description: The HTTP status code for this occurrence of the problem.
+  title:
+    type: string
+    maxLength: 1024
+    description: A short, human-readable summary of the problem type.
+  detail:
+    type: string
+    maxLength: 4096
+    description: A human-readable explanation specific to this occurrence of the problem.
+  instance:
+    type: string
+    format: uri
+    maxLength: 1024
+    description: A URI reference that identifies the specific occurrence of the problem.
+  code:
+    type: string
+    maxLength: 50
+    description: An API-specific error code helping identify the root cause.
+  errors:
+    type: array
+    maxItems: 1000
+    description: Detailed field-level errors for this problem.
+    items:
+      $ref: './problem-detail-error.yaml'
+additionalProperties: true
+required:
+  - detail
+example:
+  type: "business/bad-request"
+  status: 400
+  title: "Invalid Input"
+  detail: "The input provided is invalid."
+  instance: "https://example.com/api/v1/resource/123"
+  code: "INVALID_INPUT"
+  errors:
+    - field: "username"
+      message: "Username is required."
+    - field: "email"
+      message: "Email format is invalid."
