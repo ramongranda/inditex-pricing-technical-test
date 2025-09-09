@@ -40,8 +40,11 @@ jobs:
       - name: Build & Test (JaCoCo aggregate)
         run: mvn -B clean verify
 
+      - name: JaCoCo aggregate (run only in parent)
+        run: mvn -B -pl :inditex-pricing-technical-test -am=false jacoco:report-aggregate
+
       - name: Check JaCoCo XML
-        run: ls -l target/site/jacoco-aggregate/jacoco.xml
+        run: ls -lh target/site/jacoco-aggregate/jacoco.xml && head -n 20 target/site/jacoco-aggregate/jacoco.xml
 
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
@@ -50,5 +53,8 @@ jobs:
             -Dsonar.organization=$SONAR_ORG \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
             -Dsonar.host.url=$SONAR_URL \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.coverage.jacoco.xmlReportPaths="$(pwd)/target/site/jacoco-aggregate/jacoco.xml" \
+            -Dsonar.java.binaries="$(pwd)/**/target/classes" \
+            -Dsonar.verbose=true
 
