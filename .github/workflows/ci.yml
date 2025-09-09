@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ master ]
+    branches: [ "**" ]
 
 permissions:
   contents: read
@@ -14,47 +14,47 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_ORG: ${{ secrets.SONAR_ORG }}
-  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-  SONAR_URL: ${{secrets.SONAR_URL }}
-
 jobs:
   build-test-sonar:
     runs-on: ubuntu-latest
+    env:
+      SONAR_URL: https://sonarcloud.io
+      SONAR_ORG: ${{ secrets.SONAR_ORG }}
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # útil para blame en Sonar
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: 21
           cache: maven
 
-      - name: Build & Test
-        run: mvn -B clean verify
+      - name: Build reactor (compile + test)
+        run: mvn -B -fae clean verify
 
-      - name: JaCoCo aggregate (run only in parent)
+      - name: Aggregate JaCoCo (root only)
         run: mvn -B -N jacoco:report-aggregate
 
-      - name: Check JaCoCo XML
-        run: ls -lh target/site/jacoco-aggregate/jacoco.xml && head -n 20 target/site/jacoco-aggregate/jacoco.xml
+      - name: Inspect coverage file
+        run: |
+          ls -lh target/site/jacoco-aggregate/jacoco.xml || true
+          head -n 20 target/site/jacoco-aggregate/jacoco.xml || true
 
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
         run: |
           mvn -B sonar:sonar \
-            -Dsonar.organization=$SONAR_ORG \
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-            -Dsonar.host.url=$SONAR_URL \
-            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.organization="${SONAR_ORG}" \
+            -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
+            -Dsonar.host.url="${SONAR_URL}" \
+            -Dsonar.token="${SONAR_TOKEN}" \
             -Dsonar.coverage.jacoco.xmlReportPaths="$(pwd)/target/site/jacoco-aggregate/jacoco.xml" \
             -Dsonar.java.binaries="$(pwd)/**/target/classes" \
             -Dsonar.verbose=true
-
