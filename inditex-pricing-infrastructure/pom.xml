@@ -19,6 +19,13 @@
     ensures reliable interaction with the domain layer and supports testing to guarantee infrastructure stability
   </description>
 
+  <properties>
+    <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
+    <sonar.java.binaries>target/classes</sonar.java.binaries>
+    <sonar.sources>src/main/java</sonar.sources>
+    <sonar.tests>src/test/java</sonar.tests>
+  </properties>
+
   <dependencies>
     <!-- Modules -->
     <dependency>
