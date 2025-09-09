@@ -19,8 +19,11 @@
     generation and validation.
   </description>
 
-  <dependencies>
+  <properties>
+    <sonar.sources>src/main/resources</sonar.sources>
+  </properties>
 
+  <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>

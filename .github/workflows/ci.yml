@@ -44,7 +44,7 @@ jobs:
       - name: SonarCloud Analysis
         if: ${{ env.SONAR_TOKEN != '' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
         run: |
-          mvn -B -Psonar sonar:sonar \
+          mvn -B sonar:sonar \
             -Dsonar.organization=$SONAR_ORG \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
             -Dsonar.host.url=$SONAR_URL \
