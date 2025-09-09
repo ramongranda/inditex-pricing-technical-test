@@ -18,7 +18,7 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SONAR_ORG: ${{ secrets.SONAR_ORG }}
   SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-  SONAR_URL: ${{sectrets.SONAR_URL }}
+  SONAR_URL: ${{secrets.SONAR_URL }}
 
 jobs:
   build-test-sonar:
