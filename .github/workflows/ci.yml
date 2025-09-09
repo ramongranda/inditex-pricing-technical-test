@@ -2,12 +2,23 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
 
 permissions:
   contents: read
   pull-requests: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_ORG: ${{ secrets.SONAR_ORG }}
+  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+  SONAR_URL: ${{sectrets.SONAR_URL }}
 
 jobs:
   build-test-sonar:
@@ -16,6 +27,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # SonarCloud recomienda historial completo para PRs
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -24,16 +37,15 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Build & Test (with JaCoCo aggregate)
+      - name: Build & Test (JaCoCo aggregate)
         run: mvn -B clean verify
 
+      # Subida a SonarCloud (solo si tenemos secrets: no forks)
       - name: SonarCloud Analysis
-        if: ${{ github.event_name != 'pull_request' || github.actor != 'dependabot[bot]' }}
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: ${{ env.SONAR_TOKEN != '' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
         run: |
           mvn -B -Psonar sonar:sonar \
-            -Dsonar.organization=${{ secrets.SONAR_ORG }} \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }} \
-            -Dsonar.login=${SONAR_TOKEN}
+            -Dsonar.organization=$SONAR_ORG \
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.host.url=$SONAR_URL \
+            -Dsonar.login=$SONAR_TOKEN
