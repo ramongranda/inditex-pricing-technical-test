@@ -69,6 +69,9 @@
     <sonar.language>java</sonar.language>
     <sonar.java.lombok.enabled>true</sonar.java.lombok.enabled>
     <sonar.java.lombok.config>${project.basedir}/lombok.config</sonar.java.lombok.config>
+    <sonar.java.binaries>**/target/classes</sonar.java.binaries>
+    <sonar.sources>**/src/main/java</sonar.sources>
+    <sonar.tests>**/src/test/java</sonar.tests>
     <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.scm.provider>git</sonar.scm.provider>
@@ -334,10 +337,9 @@
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <useModulePath>false</useModulePath>
-          <argLine>${argLine} -XX:+EnableDynamicAgentLoading -Djdk.attach.allowAttachSelf=true -Xshare:off ${bud.argLine}</argLine>
+          <argLine>${argLine} -XX:+EnableDynamicAgentLoading -Djdk.attach.allowAttachSelf=true ${bud.argLine}</argLine>
           <includes>
             <include>**/*Test.*</include>
-            <include>**/*Spec.*</include>
           </includes>
           <excludes>
             <exclude>**/*IT.java</exclude>
@@ -394,13 +396,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>sonar</id>
-      <properties>
-        <!-- override sonar.host.url / sonar.login in CI -->
-      </properties>
-    </profile>
-  </profiles>
 </project>
