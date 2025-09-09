@@ -101,13 +101,13 @@ Key settings (can be overridden via environment variables):
 If you use a file-based H2 URL, the console JDBC URL typically is:
 
 ```
-jdbc:h2:file:./data/prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'
+jdbc:h2:file:./data/prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
 ```
 
 For in-memory:
 
 ```
-jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'
+jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
 ```
 
 ---
@@ -133,7 +133,7 @@ curl -i http://localhost:8081/actuator/health
 * OpenAPI JSON → `http://localhost:8081/openapi/api-docs`
 * H2 Console → `http://localhost:8081/h2-console`
 
-  * JDBC URL (memory): `jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=SET TIME ZONE 'Europe/Madrid'`
+  * JDBC URL (memory): `jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1`
   * User: `sa` — Password: *(empty unless configured)*
 
 ---
