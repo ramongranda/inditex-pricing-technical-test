@@ -32,12 +32,6 @@
       <version>${project.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.inditex.pricing</groupId>
-      <artifactId>inditex-pricing-domain</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <!-- Spring Boot-->
     <dependency>
       <groupId>org.springframework</groupId>

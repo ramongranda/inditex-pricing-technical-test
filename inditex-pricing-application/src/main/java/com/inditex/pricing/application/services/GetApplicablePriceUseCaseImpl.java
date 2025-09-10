@@ -13,6 +13,7 @@ import im.aop.loggers.advice.before.LogBefore;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -29,6 +30,7 @@ public class GetApplicablePriceUseCaseImpl implements GetApplicablePriceUseCase 
    * {@inheritDoc}
    */
   @Override
+  @Transactional(readOnly = true)
   @LogBefore(level = Level.DEBUG)
   public Optional<Price> execute(@NotNull final Integer brandId, @NotNull final Integer productId, @NotNull final Instant applicationDate) {
     return this.priceQueryPort.findApplicable(brandId, productId, applicationDate);
