@@ -48,6 +48,13 @@ jobs:
       - name: Convert PIT → Sonar generic issues
         run: scripts/pit-to-sonar-json.sh
 
+      - name: Validate external-issues.json
+        run: |
+          python - <<'PY'
+          import json; json.load(open("external-issues.json")); print("external-issues.json OK")
+          PY
+          head -n 10 external-issues.json        
+
       # ===== MUTATION badge (Shields endpoint) =====
       - name: Build mutation badge (Shields endpoint)
         run: |
