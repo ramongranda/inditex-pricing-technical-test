@@ -264,7 +264,6 @@
             <excludedClasses>
               <param>**/*Application</param>
               <param>**/*Configuration</param>
-              <param>**/*Mapper</param>
               <param>**/*MapperImpl</param>
               <param>**/*DTO</param>
               <param>**/*Dto</param>
@@ -274,7 +273,6 @@
             <excludedTestClasses>
               <param>**/*IT</param>
             </excludedTestClasses>
-
             <exportLineCoverage>true</exportLineCoverage>
             <failWhenNoMutations>false</failWhenNoMutations>
             <mutators>
