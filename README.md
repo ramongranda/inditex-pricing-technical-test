@@ -329,3 +329,18 @@ docker run --rm -p 8080:8080 inditex-pricing:latest
 - See [Docker documentation](https://docs.docker.com/) and [Docker Compose documentation](https://docs.docker.com/compose/) for advanced options.
 
 ---
+
+## Production Deployment
+
+The Inditex Pricing application is deployed in production on [Render](https://render.com/).
+
+**Production URL:**
+
+[https://inditex-pricing-technical-test.onrender.com/](https://inditex-pricing-technical-test.onrender.com/)
+
+**Production Endpoints:**
+- **Swagger UI:** [https://inditex-pricing-technical-test.onrender.com/openapi/ui](https://inditex-pricing-technical-test.onrender.com/openapi/ui)
+- **OpenAPI JSON:** [https://inditex-pricing-technical-test.onrender.com/openapi/api-docs](https://inditex-pricing-technical-test.onrender.com/openapi/api-docs)
+- **H2 Console:** [https://inditex-pricing-technical-test.onrender.com/h2-console](https://inditex-pricing-technical-test.onrender.com/h2-console)
+
+You can access the live API, Swagger UI, and H2 Console at these addresses. The deployment uses the same Docker image and configuration described above.
