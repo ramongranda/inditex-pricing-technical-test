@@ -48,23 +48,21 @@ jobs:
           echo "== JACOCO .exec FILES (size) =="
           find . -name 'jacoco*.exec' -printf '%10s  %p\n' | sort -nr | head -n 50 || true
 
-      - name: Inspect JaCoCo aggregate XML
+      - name: Check JaCoCo aggregate
         run: |
-          ls -lh target/site/jacoco-aggregate/jacoco.xml || true
-          grep -m1 '<counter type="INSTRUCTION"' -n target/site/jacoco-aggregate/jacoco.xml || true
-
-      - name: Load sonar-project.properties como args
-        run: |
-          SONAR_ARGS=$(grep -vE '^\s*(#|$)' sonar-project.properties | sed 's/^/-D/' | tr '\n' ' ')
-          echo "SONAR_ARGS=$SONAR_ARGS" >> $GITHUB_ENV
+          ls -lh jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml || true
+          ls -lh target/site/jacoco-aggregate/jacoco.xml || true   # fallback
 
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
         run: |
-          mvn -B sonar:sonar  $SONAR_ARGS \
+          RPTS=$(find . -type f -path '*/target/site/jacoco*/jacoco.xml' -print | paste -sd, -)
+          echo "Reports: $RPTS"
+          mvn -B sonar:sonar \
           -Dsonar.organization="${SONAR_ORG}" \
           -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
           -Dsonar.host.url="${SONAR_URL}" \
           -Dsonar.token="${SONAR_TOKEN}" \
+          -Dsonar.coverage.jacoco.xmlReportPaths="$RPTS" \
           -Dsonar.verbose=true
 
