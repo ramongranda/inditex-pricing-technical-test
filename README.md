@@ -276,3 +276,56 @@ For more details, see the [PIT documentation](https://pitest.org/quickstart/mave
 ## License
 
 This repository includes an OSS license file; see `LICENSE` for details.
+
+---
+
+## Docker & Docker Compose
+
+You can run the Inditex Pricing application using Docker or Docker Compose for easy deployment, local development, and testing. Below are the recommended ways to build and run the application using containers.
+
+### Quick Start
+
+#### 1. Run with Docker Compose (Recommended)
+This will build the image and start the application (and any dependencies you add in `docker-compose.yml`).
+
+```bash
+# Build and run the application and its dependencies
+docker compose up --build
+```
+- The app will be available at [http://localhost:8080/openapi/ui](http://localhost:8080/openapi/ui).
+- To stop and remove containers:
+  ```bash
+  docker compose down
+  ```
+
+#### 2. Run with Docker only (no Compose)
+If you only want to run the application container:
+
+```bash
+# Build the Docker image (from the project root or inditex-pricing-boot)
+docker build -t inditex-pricing:latest .
+
+# Run the container (removes container after exit)
+docker run --rm -p 8080:8080 inditex-pricing:latest
+```
+
+### Customization & Advanced Usage
+- **Environment variables:** You can override settings (e.g. `SERVER_PORT`, `SPRING_PROFILES_ACTIVE`) in `docker-compose.yml` under `environment:`.
+- **Mount configuration or DB scripts:** Uncomment and edit the `volumes:` section in `docker-compose.yml` to mount custom files.
+- **Add services:** You can add a database (e.g. MariaDB) or other dependencies in `docker-compose.yml`.
+- **Health checks:** Add a `healthcheck:` section to monitor container health.
+
+### Accessing the Application
+- **Swagger UI:** [http://localhost:8080/openapi/ui](http://localhost:8080/openapi/ui)
+- **OpenAPI JSON:** [http://localhost:8080/openapi/api-docs](http://localhost:8080/openapi/api-docs)
+- **H2 Console:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+
+### Troubleshooting
+- If the app does not start, check the logs with `docker compose logs` or `docker logs <container>`.
+- Make sure port 8080 is not in use by another process.
+- For custom ports, set `SERVER_PORT` in the environment section.
+
+### More Information
+- See [Docker documentation](https://docs.docker.com/) and [Docker Compose documentation](https://docs.docker.com/compose/) for advanced options.
+
+---
