@@ -29,6 +29,20 @@ logging:
     org.hibernate.SQL: ${LOGGING_HIBERNATE_SQL:DEBUG}
     org.hibernate.type.descriptor.sql: ${LOGGING_HIBERNATE_TYPE_DESCRIPTOR:TRACE}
     com.inditex.pricing.infrastructure.jpa: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: ${project.version}
+    description: ${project.description}
+    build: ${project.build.timestamp}
+
 im:
   aop:
     loggers:
