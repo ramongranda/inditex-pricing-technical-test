@@ -264,6 +264,7 @@
             <excludedClasses>
               <param>**/*Application</param>
               <param>**/*Configuration</param>
+              <param>**/*Mapper</param>
               <param>**/*MapperImpl</param>
               <param>**/*DTO</param>
               <param>**/*Dto</param>
