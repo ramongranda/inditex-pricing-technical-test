@@ -379,28 +379,23 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven.version}</version>
+        <version>0.8.13</version>
         <executions>
-          <!-- Unit tests -->
           <execution>
             <id>prepare-agent</id>
+            <phase>initialize</phase>
             <goals><goal>prepare-agent</goal></goals>
-            <configuration>
-              <propertyName>surefireArgLine</propertyName>
-            </configuration>
+            <configuration><propertyName>surefireArgLine</propertyName></configuration>
           </execution>
-
           <execution>
             <id>prepare-agent-it</id>
             <phase>pre-integration-test</phase>
             <goals><goal>prepare-agent-integration</goal></goals>
-            <configuration>
-              <propertyName>failsafeArgLine</propertyName>
-            </configuration>
+            <configuration><propertyName>failsafeArgLine</propertyName></configuration>
           </execution>
-
           <execution>
             <id>report-aggregate</id>
+            <phase>verify</phase>
             <goals><goal>report-aggregate</goal></goals>
             <inherited>false</inherited>
           </execution>
