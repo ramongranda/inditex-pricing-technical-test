@@ -37,7 +37,7 @@ jobs:
           cache: maven
 
       - name: Build reactor (compile + test)
-        run: mvn -B -fae clean verify
+        run: mvn -B -fae clean verify jacoco:report-aggregate
 
       - name: Inspect classes & execs
         run: |
@@ -48,22 +48,19 @@ jobs:
           echo "== JACOCO .exec FILES (size) =="
           find . -name 'jacoco*.exec' -printf '%10s  %p\n' | sort -nr | head -n 50 || true
 
-      - name: Aggregate JaCoCo (root only)
-        run: mvn -B -N jacoco:report-aggregate
-
       - name: Inspect JaCoCo aggregate XML
         run: |
           ls -lh target/site/jacoco-aggregate/jacoco.xml || true
           grep -m1 '<counter type="INSTRUCTION"' -n target/site/jacoco-aggregate/jacoco.xml || true
 
       - name: SonarCloud Analysis
-        if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
         run: |
+          BIN="$(find . -type d -path '*/target/classes' -print | tr '\n' ',' | sed 's/,$//')"
           mvn -B sonar:sonar \
             -Dsonar.organization="${SONAR_ORG}" \
             -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
             -Dsonar.host.url="${SONAR_URL}" \
             -Dsonar.token="${SONAR_TOKEN}" \
             -Dsonar.coverage.jacoco.xmlReportPaths="$(pwd)/target/site/jacoco-aggregate/jacoco.xml" \
-            -Dsonar.java.binaries="$(pwd)/**/target/classes" \
+            -Dsonar.java.binaries="$BIN" \
             -Dsonar.verbose=true
