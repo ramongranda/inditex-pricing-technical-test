@@ -22,7 +22,7 @@
     <sonar.java.lombok.enabled>true</sonar.java.lombok.enabled>
     <sonar.java.lombok.config>${project.basedir}/lombok.config</sonar.java.lombok.config>
     <sonar.scm.provider>git</sonar.scm.provider>
-    <sonar.exclusions>**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**,com/inditex/pricing/Application.java</sonar.exclusions>
+    <sonar.exclusions>**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**,**/Application.java</sonar.exclusions>
     <sonar.coverage.exclusions>**/*Exception.java,**/*DTO.*,**/*Dto.*,**/*.md,**/*MapperImpl.java,**/config/**</sonar.coverage.exclusions>
     <sonar.cpd.exclusions>**/*Test*.java,**/*IT.java,**/*MapperImpl.java,**/domain/**,**/*Mapper.java</sonar.cpd.exclusions>
   </properties>
