@@ -28,11 +28,11 @@ mvn -pl inditex-pricing-boot -am spring-boot:run
 java -jar inditex-pricing-boot/target/inditex-pricing-boot-*.jar
 ```
 
-* **Swagger UI:** `http://localhost:8081/openapi/ui`
-* **OpenAPI JSON:** `http://localhost:8081/openapi/api-docs`
-* **H2 Console:** `http://localhost:8081/h2-console` (if enabled)
+* **Swagger UI:** `http://localhost:8080/openapi/ui`
+* **OpenAPI JSON:** `http://localhost:8080/openapi/api-docs`
+* **H2 Console:** `http://localhost:8080/h2-console` (if enabled)
 
-> The default port `8081` and OpenAPI paths come from `inditex-pricing-boot/src/main/resources/application.yaml`.
+> The default port `8080` and OpenAPI paths come from `inditex-pricing-boot/src/main/resources/application.yaml`.
 > You can override them with env vars: `SERVER_PORT`, `SPRINGDOC_SWAGGER_UI_PATH`, `SPRINGDOC_API_DOCS_PATH`.
 
 ---
@@ -101,7 +101,7 @@ All defaults live in `inditex-pricing-boot/src/main/resources/application.yaml`.
 
 Key settings (can be overridden via environment variables):
 
-* `server.port` → default **8081** (`SERVER_PORT`).
+* `server.port` → default **8080** (`SERVER_PORT`).
 * **Springdoc / Swagger:**
 
   * API Docs: `/openapi/api-docs` (`SPRINGDOC_API_DOCS_PATH`)
@@ -131,20 +131,20 @@ jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
 # 1) Build everything
 mvn -q -DskipTests package
 
-# 2) Start the app (port 8081 by default)
+# 2) Start the app (port 8080 by default)
 mvn -pl inditex-pricing-boot -am spring-boot:run
 # or
 java -jar inditex-pricing-boot/target/inditex-pricing-boot-*.jar
 
 # 3) Check health (optional)
-curl -i http://localhost:8081/actuator/health
+curl -i http://localhost:8080/actuator/health
 ```
 
 ### Access
 
-* Swagger UI → `http://localhost:8081/openapi/ui`
-* OpenAPI JSON → `http://localhost:8081/openapi/api-docs`
-* H2 Console → `http://localhost:8081/h2-console`
+* Swagger UI → `http://localhost:8080/openapi/ui`
+* OpenAPI JSON → `http://localhost:8080/openapi/api-docs`
+* H2 Console → `http://localhost:8080/h2-console`
 
   * JDBC URL (memory): `jdbc:h2:mem:prices;MODE=MariaDB;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1`
   * User: `sa` — Password: *(empty unless configured)*
