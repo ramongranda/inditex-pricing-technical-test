@@ -99,11 +99,9 @@ Swagger UI is provided by **springdoc** and is exposed at `/openapi/ui`.
 
 * **Engine:** H2 **in-memory** configured in **MariaDB compatibility mode**.
 * **Schema/Data init:** scripts under `inditex-pricing-boot/src/main/resources/db/`:
-
   * `schema.sql` – creates table `PRICES` and indexes.
   * `data.sql` – seeds the sample price windows for the exercise.
 * **Types** (aligned with realistic scale):
-
   * `BRAND_ID` → `INT`
   * `PRODUCT_ID` → `INT`
   * `PRICE_LIST` → `INT`
@@ -112,13 +110,11 @@ Swagger UI is provided by **springdoc** and is exposed at `/openapi/ui`.
   * `CURR` → `CHAR(3)` (ISO‑4217 alpha‑3)
   * `START_DATE` / `END_DATE` → `TIMESTAMP`
 * **Time zone policy:**
+  * **Database timestamps are stored and compared in Europe/Madrid time zone (GMT+1 or GMT+2 depending on daylight saving time).**
+  * **Application & REST API always use UTC (ISO-8601, e.g., `2020-06-14T10:00:00Z`).**
+  * Hibernate reads/writes temporal values in UTC; session time zone at the DB ensures comparisons against `TIMESTAMP` behave as if data were in Europe/Madrid.
 
-  * **Database session:** assumed **Spain peninsular time (Europe/Madrid, GMT+1 or GMT+2 depending on daylight saving time)** (MariaDB/H2 session time zone).
-  * **Application & REST:** **UTC** (ISO���8601, e.g., `2020-06-14T10:00:00Z`).
-  * Hibernate reads/writes temporal values in UTC; session time zone at the DB ensures comparisons against `TIMESTAMP` behave as if data
-    were in GMT+1.
-
-> This matches the requirement: **DB in +1; everything else in UTC**.
+> This matches the requirement: **DB in Europe/Madrid; everything else in UTC**.
 
 ---
 
