@@ -127,6 +127,10 @@ jobs:
 
   # --- E2E with Postman/Newman, starting the app with docker-compose ---
   postman-tests:
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
     runs-on: ubuntu-latest
     needs: build-test-sonar   # remove if you want parallel execution
     steps:
@@ -175,7 +179,12 @@ jobs:
           path: reports/
 
       - name: Publish JUnit summary
-        if: always()
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         uses: mikepenz/action-junit-report@v4
         with:
           report_paths: reports/junit.xml
+          check_name: "Postman E2E"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_failure: true
+          require_tests: true
+
