@@ -12,6 +12,7 @@ import com.inditex.pricing.domain.model.Period;
 import com.inditex.pricing.domain.model.Price;
 import com.inditex.pricing.infrastructure.jpa.PriceEntity;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -40,18 +41,26 @@ public interface PriceEntityMapper {
    */
   @Named("toMoney")
   default Money toMoney(PriceEntity source) {
-    return Optional.ofNullable(source).map(e -> new Money(e.getPrice(), e.getCurr())).orElse(null);
+    return Optional.ofNullable(source)
+        .filter(e -> ObjectUtils.allNotNull(e.getPrice(), e.getCurr()))
+        .map(e -> new Money(e.getPrice(), e.getCurr()))
+        .orElse(null);
   }
 
   /**
    * Converts a PriceEntity to a Period object.
    *
    * @param source the PriceEntity containing start and end date information
-   * @return the corresponding Period object, or null if the entity is null
+   * @return the corresponding Period object, or null if the entity is null or dates are missing
    */
   @Named("toPeriod")
   default Period toPeriod(PriceEntity source) {
-    return Optional.ofNullable(source).map(e -> new Period(toInstant(e.getStartDate(), null), toInstant(e.getEndDate(), Instant.MAX)))
+    return Optional.ofNullable(source)
+        .map(e -> {
+          Instant start = toInstant(e.getStartDate(), null);
+          Instant end = toInstant(e.getEndDate(), null);
+          return ObjectUtils.allNotNull(start, end) ? new Period(start, end) : null;
+        })
         .orElse(null);
   }
 

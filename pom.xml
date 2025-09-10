@@ -262,16 +262,16 @@
 
             <!-- Exclusiones útiles -->
             <excludedClasses>
-              <param>**/*Application</param>
-              <param>**/*Configuration</param>
-              <param>**/*MapperImpl</param>
-              <param>**/*DTO</param>
-              <param>**/*Dto</param>
-              <param>**/*Exception*</param>
-              <param>**/*Test*</param>
+              <param>**.*Application</param>
+              <param>**.*Configuration</param>
+              <param>**.*MapperImpl</param>
+              <param>**.*DTO</param>
+              <param>**.*Dto</param>
+              <param>**.*Exception*</param>
+              <param>**.*Test*</param>
             </excludedClasses>
             <excludedTestClasses>
-              <param>**/*IT</param>
+              <param>**.*IT</param>
             </excludedTestClasses>
             <exportLineCoverage>true</exportLineCoverage>
             <failWhenNoMutations>false</failWhenNoMutations>
