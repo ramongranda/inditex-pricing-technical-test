@@ -39,19 +39,25 @@ jobs:
       - name: Build reactor (compile + test)
         run: mvn -B -fae clean verify
 
-      - name: Inspect classes & execs
+      # --- NUEVO: PIT en todos los módulos con código ---
+      - name: PIT (mutation testing)
         run: |
-          echo "== CLASSES =="
-          find . -type d -path '*/target/classes' -maxdepth 0 -print | sed 's|^|  |'
-          echo "== TEST-CLASSES =="
-          find . -type d -path '*/target/test-classes' -maxdepth 0 -print | sed 's|^|  |'
-          echo "== JACOCO .exec FILES (size) =="
-          find . -name 'jacoco*.exec' -printf '%10s  %p\n' | sort -nr | head -n 50 || true
+          mvn -B -fae -Pmutation-testing verify \
+            -DskipTests=false \
+            -Dthreads=4 -DwithHistory=true
 
-      - name: Check JaCoCo aggregate
-        run: |
-          ls -lh jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml || true
-          ls -lh target/site/jacoco-aggregate/jacoco.xml || true   # fallback
+      # --- NUEVO: convertir PIT → Sonar generic issues ---
+      - name: Convert PIT → Sonar generic issues
+        run: scripts/pit-to-sonar-json.sh
+
+      # (Opcional) sube los HTML de PIT como artefacto
+      - name: Upload PIT HTML reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-reports
+          path: "**/target/pit-reports/**"
+          if-no-files-found: ignore
 
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')

@@ -52,6 +52,7 @@
     <instancio.version>5.0.2</instancio.version>
 
     <!-- Plugins -->
+    <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
     <openapi.generator.version>7.15.0</openapi.generator.version>
@@ -61,9 +62,13 @@
     <spotbugs-maven-plugin.version>4.8.6.3</spotbugs-maven-plugin.version>
     <sonar-maven.version>3.9.1.2184</sonar-maven.version>
     <jacoco-maven.version>0.8.13</jacoco-maven.version>
+    <pitest-maven.version>1.15.2</pitest-maven.version>
+    <pitest-junit5-plugin.version>1.1.2</pitest-junit5-plugin.version>
 
     <!-- ByteBuddy agent (Mockito inline) -->
     <bud.argLine>-javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar</bud.argLine>
+
+    <sonar.pitest.reportPath>target/pit-reports/mutations.xml</sonar.pitest.reportPath>
 
   </properties>
 
@@ -173,7 +178,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.11.0</version>
+          <version>${maven-compiler-plugin.version}</version>
           <configuration>
             <release>${java.version}</release>
             <annotationProcessorPaths>
@@ -239,6 +244,63 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>${jacoco-maven-plugin.version}</version>
         </plugin>
+
+        <!-- PIT Mutation Testing -->
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <version>${pitest-maven.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.pitest</groupId>
+              <artifactId>pitest-junit5-plugin</artifactId>
+              <version>${pitest-junit5-plugin.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <!-- Scope -->
+            <targetClasses>
+              <param>com.inditex.pricing.*</param>
+            </targetClasses>
+            <targetTests>
+              <param>com.inditex.pricing.*Test</param>
+            </targetTests>
+
+            <!-- Formatos + rutas -->
+            <outputFormats>
+              <param>HTML</param>
+              <param>XML</param>
+              <param>CSV</param>
+            </outputFormats>
+            <reportsDirectory>${project.build.directory}/pit-reports</reportsDirectory>
+            <timestampedReports>false</timestampedReports>
+
+            <!-- Exclusiones útiles -->
+            <excludedClasses>
+              <param>**/*Application</param>
+              <param>**/*Configuration</param>
+              <param>**/*MapperImpl</param>
+              <param>**/*DTO</param>
+              <param>**/*Dto</param>
+              <param>**/*Exception*</param>
+              <param>**/*Test*</param>
+            </excludedClasses>
+            <excludedTestClasses>
+              <param>**/*IT</param>
+            </excludedTestClasses>
+
+            <exportLineCoverage>true</exportLineCoverage>
+            <failWhenNoMutations>false</failWhenNoMutations>
+            <mutators>
+              <mutator>DEFAULTS</mutator>
+            </mutators>
+            <threads>4</threads>
+            <timeoutFactor>3.0</timeoutFactor>
+            <timeoutConstant>60000</timeoutConstant>
+            <verbose>true</verbose>
+          </configuration>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -395,4 +457,29 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>mutation-testing</id>
+      <activation>
+        <file><exists>src/main/java</exists></file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <executions>
+              <execution>
+                <id>pit</id>
+                <phase>verify</phase>
+                <goals><goal>mutationCoverage</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>

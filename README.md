@@ -180,6 +180,77 @@ mvn -pl inditex-pricing-boot verify
 
 ---
 
+## How to Run Unit Tests
+
+To execute all unit tests for all modules:
+
+```bash
+mvn test
+```
+
+To run unit tests for a specific module:
+
+```bash
+cd inditex-pricing-domain
+mvn test
+```
+
+Test reports are generated in each module under `target/surefire-reports/`.
+
+---
+
+## Mutation Testing (PIT)
+
+Mutation testing is enabled for all modules using [PIT](https://pitest.org/) and the JUnit 5 plugin. This helps ensure the quality of your unit tests by checking if they can detect small changes (mutations) in the code.
+
+### How to Run Mutation Tests
+
+To execute mutation tests and generate reports:
+
+```bash
+# Run PIT mutation tests for all modules
+mvn org.pitest:pitest-maven:mutationCoverage
+```
+
+Reports will be generated in each module under `target/pit-reports/`.
+
+You can also run PIT for a specific module:
+
+```bash
+cd inditex-pricing-domain
+mvn org.pitest:pitest-maven:mutationCoverage
+```
+
+The configuration uses the JUnit 5 plugin and excludes configuration, DTO, MapperImpl, Exception, and test classes from mutation analysis. Reports are generated in HTML, XML, and CSV formats.
+
+For more details, see the [PIT documentation](https://pitest.org/quickstart/maven/).
+
+---
+
+## Mutation Testing (PIT) in Multi-Module Projects
+
+**Important:** PIT mutation testing must be executed in each module that contains source code and unit tests. Do not run PIT from the root `pom.xml` (packaging `pom`), as it does not contain code or tests and will result in an error like:
+
+```
+could not find reports directory [<root>/target/pit-reports]
+```
+
+### How to Run Mutation Tests in Each Module
+
+1. Change to the module directory (e.g. `inditex-pricing-domain`, `inditex-pricing-application`, etc.):
+   ```bash
+   cd inditex-pricing-domain
+   mvn org.pitest:pitest-maven:mutationCoverage
+   ```
+2. The mutation report will be generated in `target/pit-reports/` inside that module.
+3. Repeat for each module you want to analyze.
+
+> There is no automatic aggregation of PIT reports across modules. Each module produces its own report.
+
+For more details, see the [PIT documentation](https://pitest.org/quickstart/maven/).
+
+---
+
 ## Development Notes
 
 * Contract-first: change `openapi.yaml`, regenerate interfaces/VOs, implement delegates in `inditex-pricing-rest-api`.
