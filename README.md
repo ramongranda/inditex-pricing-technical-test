@@ -14,6 +14,33 @@
 
 Pricing service for Inditex built with **Spring Boot 3**, **Hexagonal Architecture**, **OpenAPI (contract-first)** and **H2 in MariaDB mode**.
 
+
+---
+
+## Testing Pyramid
+
+```
+           ▲
+           │    End-to-End (Postman/Newman)
+           │    - Real HTTP calls against running service
+           │    - Validates contract and full flow
+           │
+           │    Integration (SpringBootTest/MockMvc)
+           │    - Verifies wiring of layers + persistence
+           │    - Runs inside JVM with H2
+           │
+           │    Unit (JUnit/Mockito)
+           │    - Fast, isolated, class-level checks
+           ▼
+```
+
+- **Unit tests**: fast feedback, cover core domain logic.  
+- **Integration tests**: guarantee adapters and infrastructure behave together.  
+- **E2E tests**: simulate real clients hitting the API (`/prices`, `/actuator/*`) via Postman.  
+- **Mutation testing (PIT)**: ensures unit tests are strong by measuring killed vs survived mutants.  
+
+CI pipeline runs **all layers**: unit, integration, mutation, and E2E.  
+Badges on top show coverage, quality gates, and mutation score.
 ---
 
 ## (Run it)

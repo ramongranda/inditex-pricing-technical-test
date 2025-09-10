@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "d2d8c6ca-6d14-425d-bcf2-ce60174dee57",
+		"name": "Inditex Pricing API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3485861",
+		"_collection_link": "https://aquaindi.postman.co/workspace/Technical-Test~85de5254-c2a9-472a-bf65-a8d440a3a84e/collection/3485861-d2d8c6ca-6d14-425d-bcf2-ce60174dee57?action=share&source=collection_link&creator=3485861"
+	},
+	"item": [
+		{
+			"name": "prices",
+			"item": [
+				{
+					"name": "Get applicable price for a product and brand at a given date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// HTTP\r",
+									"pm.test(\"status 200\", () => pm.response.code === 200);\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"\r",
+									"// Campos esperados\r",
+									"pm.test(\"has fields\", () => {\r",
+									"  pm.expect(body).to.have.property(\"priceList\");\r",
+									"  pm.expect(body).to.have.property(\"price\");\r",
+									"  pm.expect(body).to.have.property(\"curr\");\r",
+									"});\r",
+									"\r",
+									"// priceList\r",
+									"pm.test(\"priceList matches\", () =>\r",
+									"  pm.expect(Number(body.priceList)).to.eql(Number(pm.iterationData.get(\"expectedList\")))\r",
+									");\r",
+									"\r",
+									"// price con tolerancia\r",
+									"const actual = Number(body.price);\r",
+									"const expected = Number(pm.iterationData.get(\"expectedPrice\"));\r",
+									"pm.test(`price matches ±0.0001 (got ${actual}, expected ${expected})`, () =>\r",
+									"  pm.expect(Math.abs(actual - expected)).to.be.below(0.0001)\r",
+									");\r",
+									"\r",
+									"// currency\r",
+									"pm.test(\"currency EUR\", () => pm.expect(body.curr).to.eql(\"EUR\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/prices?applicationDate={{applicationDate}}&productId={{productId}}&brandId={{brandId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"prices"
+							],
+							"query": [
+								{
+									"key": "applicationDate",
+									"value": "{{applicationDate}}",
+									"description": "(Required) Date and time of the price application in UTC. Format ISO-8601 (e.g. `2020-06-14T10:00:00Z`)"
+								},
+								{
+									"key": "productId",
+									"value": "{{productId}}",
+									"description": "(Required) Unique identifier of the product (INT, max 2,147,483,647)."
+								},
+								{
+									"key": "brandId",
+									"value": "{{brandId}}",
+									"description": "(Required) Unique identifier of the brand (SMALLINT, max 32,767)."
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Price found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/prices?applicationDate=1991-03-22T03:12:54.856Z&productId=651212833&brandId=7386",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"prices"
+									],
+									"query": [
+										{
+											"key": "applicationDate",
+											"value": "1991-03-22T03:12:54.856Z",
+											"description": "(Required) Date and time of the price application in UTC. Format ISO-8601 (e.g. `2020-06-14T10:00:00Z`)"
+										},
+										{
+											"key": "productId",
+											"value": "651212833",
+											"description": "(Required) Unique identifier of the product (INT, max 2,147,483,647)."
+										},
+										{
+											"key": "brandId",
+											"value": "7386",
+											"description": "(Required) Unique identifier of the brand (SMALLINT, max 32,767)."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"brandId\": 1,\n  \"curr\": \"EUR\",\n  \"endDate\": \"2020-06-14T18:30:00Z\",\n  \"price\": 25.45,\n  \"priceList\": 2,\n  \"productId\": 35455,\n  \"startDate\": \"2020-06-14T15:00:00Z\"\n}"
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/prices?applicationDate=1991-03-22T03:12:54.856Z&productId=651212833&brandId=7386",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"prices"
+									],
+									"query": [
+										{
+											"key": "applicationDate",
+											"value": "1991-03-22T03:12:54.856Z",
+											"description": "(Required) Date and time of the price application in UTC. Format ISO-8601 (e.g. `2020-06-14T10:00:00Z`)"
+										},
+										{
+											"key": "productId",
+											"value": "651212833",
+											"description": "(Required) Unique identifier of the product (INT, max 2,147,483,647)."
+										},
+										{
+											"key": "brandId",
+											"value": "7386",
+											"description": "(Required) Unique identifier of the brand (SMALLINT, max 32,767)."
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": \"string\",\n  \"type\": \"https://jugZnGCDqGVwOe.dcakqnP\",\n  \"status\": 562,\n  \"title\": \"string\",\n  \"instance\": \"http://KaSeJhIaQhmpNw.heetdUe,Iq,sPFrerh\",\n  \"code\": \"string\",\n  \"errors\": [\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"str\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"st\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"str\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"s\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/prices?applicationDate=1991-03-22T03:12:54.856Z&productId=651212833&brandId=7386",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"prices"
+									],
+									"query": [
+										{
+											"key": "applicationDate",
+											"value": "1991-03-22T03:12:54.856Z",
+											"description": "(Required) Date and time of the price application in UTC. Format ISO-8601 (e.g. `2020-06-14T10:00:00Z`)"
+										},
+										{
+											"key": "productId",
+											"value": "651212833",
+											"description": "(Required) Unique identifier of the product (INT, max 2,147,483,647)."
+										},
+										{
+											"key": "brandId",
+											"value": "7386",
+											"description": "(Required) Unique identifier of the brand (SMALLINT, max 32,767)."
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": \"string\",\n  \"type\": \"https://jugZnGCDqGVwOe.dcakqnP\",\n  \"status\": 562,\n  \"title\": \"string\",\n  \"instance\": \"http://KaSeJhIaQhmpNw.heetdUe,Iq,sPFrerh\",\n  \"code\": \"string\",\n  \"errors\": [\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"str\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"st\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"str\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"s\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "Internal server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/prices?applicationDate=1991-03-22T03:12:54.856Z&productId=651212833&brandId=7386",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"prices"
+									],
+									"query": [
+										{
+											"key": "applicationDate",
+											"value": "1991-03-22T03:12:54.856Z",
+											"description": "(Required) Date and time of the price application in UTC. Format ISO-8601 (e.g. `2020-06-14T10:00:00Z`)"
+										},
+										{
+											"key": "productId",
+											"value": "651212833",
+											"description": "(Required) Unique identifier of the product (INT, max 2,147,483,647)."
+										},
+										{
+											"key": "brandId",
+											"value": "7386",
+											"description": "(Required) Unique identifier of the brand (SMALLINT, max 32,767)."
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"detail\": \"string\",\n  \"type\": \"https://jugZnGCDqGVwOe.dcakqnP\",\n  \"status\": 562,\n  \"title\": \"string\",\n  \"instance\": \"http://KaSeJhIaQhmpNw.heetdUe,Iq,sPFrerh\",\n  \"code\": \"string\",\n  \"errors\": [\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"str\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"st\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"str\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"s\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    },\n    {\n      \"detail\": \"string\",\n      \"pointer\": \"string\",\n      \"parameter\": \"string\",\n      \"header\": \"string\",\n      \"code\": \"string\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "actuator",
+			"item": [
+				{
+					"name": "Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1) HTTP status\r",
+									"pm.test(\"status 200\", () => pm.response.code === 200);\r",
+									"\r",
+									"// 2) Valid JSON\r",
+									"pm.test(\"valid JSON\", () => pm.response.to.have.jsonBody());\r",
+									"\r",
+									"// 3) Contains 'build'\r",
+									"const body = pm.response.json();\r",
+									"pm.test(\"contains 'build'\", () => pm.expect(body).to.have.property(\"build\"));\r",
+									"\r",
+									"// 4) Correct name\r",
+									"pm.test(\"correct name\", () =>\r",
+									"  pm.expect(body.build.name).to.eql(\"inditex-pricing-boot\"));\r",
+									"\r",
+									"// 5) Non-empty version\r",
+									"pm.test(\"non-empty version\", () =>\r",
+									"  pm.expect(body.build.version).to.not.be.empty);\r",
+									"\r",
+									"// 6) (Optional) artifact = name\r",
+									"pm.test(\"artifact matches name\", () =>\r",
+									"  pm.expect(body.build.artifact).to.eql(body.build.name));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1) HTTP status\r",
+									"pm.test(\"status 200\", () => pm.response.code === 200);\r",
+									"\r",
+									"// 2) Contains field 'status'\r",
+									"pm.test(\"contains field 'status'\", () => {\r",
+									"  const body = pm.response.json();\r",
+									"  pm.expect(body).to.have.property(\"status\", \"UP\");\r",
+									"});\r",
+									"\r",
+									"// 3) Contains groups\r",
+									"pm.test(\"contains groups\", () => {\r",
+									"  const body = pm.response.json();\r",
+									"  pm.expect(body).to.have.property(\"groups\");\r",
+									"  pm.expect(body.groups).to.include.members([\"liveness\", \"readiness\"]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

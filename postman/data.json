@@ -1,0 +1,7 @@
+[
+  { "applicationDate": "2020-06-14T10:00:00Z", "productId": 35455, "brandId": 1, "expectedList": 1, "expectedPrice": 35.50 },
+  { "applicationDate": "2020-06-14T16:00:00Z", "productId": 35455, "brandId": 1, "expectedList": 2, "expectedPrice": 25.45 },
+  { "applicationDate": "2020-06-14T21:00:00Z", "productId": 35455, "brandId": 1, "expectedList": 1, "expectedPrice": 35.50 },
+  { "applicationDate": "2020-06-15T10:00:00Z", "productId": 35455, "brandId": 1, "expectedList": 1, "expectedPrice": 35.50 },
+  { "applicationDate": "2020-06-16T21:00:00Z", "productId": 35455, "brandId": 1, "expectedList": 4, "expectedPrice": 38.95 }
+]
