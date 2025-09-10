@@ -8,6 +8,7 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ramongranda_inditex-pricing-technical-test&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ramongranda_inditex-pricing-technical-test)
+![Mutation](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ORG/REPO/main/badges/mutation.json)
 
 # Inditex Pricing – Technical Test
 

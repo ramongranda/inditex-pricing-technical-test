@@ -39,18 +39,15 @@ jobs:
       - name: Build reactor (compile + test)
         run: mvn -B -fae clean verify
 
-      # --- NUEVO: PIT en todos los módulos con código ---
       - name: PIT (mutation testing)
         run: |
           mvn -B -fae -Pmutation-testing verify \
             -DskipTests=false \
             -Dthreads=4 -DwithHistory=true
 
-      # --- NUEVO: convertir PIT → Sonar generic issues ---
       - name: Convert PIT → Sonar generic issues
         run: scripts/pit-to-sonar-json.sh
 
-      # (Opcional) sube los HTML de PIT como artefacto
       - name: Upload PIT HTML reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,6 +55,56 @@ jobs:
           name: pit-reports
           path: "**/target/pit-reports/**"
           if-no-files-found: ignore
+
+      - name: Build mutation badge (Shields endpoint)
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET, json, os, math
+          from pathlib import Path
+          
+          # Busca el primer mutations.xml (ajústalo si quieres agregación)
+          reports = list(Path(".").rglob("target/pit-reports/**/mutations.xml")) + \
+                    list(Path(".").rglob("target/pit-reports/mutations.xml"))
+          if not reports:
+              score = 0.0
+          else:
+              killed = survived = nocov = 0
+              for rpt in reports:
+                  root = ET.parse(rpt).getroot()
+                  for m in root.findall(".//mutation"):
+                      st = (m.get("status") or "").upper()
+                      if st == "KILLED": killed += 1
+                      elif st == "SURVIVED": survived += 1
+                      elif st == "NO_COVERAGE": nocov += 1
+              total = killed + survived + nocov
+              score = (100.0 * killed / total) if total else 0.0
+          
+          # Colores por umbrales
+          def color(p):
+              return ("red" if p < 40 else
+                      "orange" if p < 60 else
+                      "yellow" if p < 75 else
+                      "yellowgreen" if p < 85 else
+                      "green")
+          
+          data = {
+            "schemaVersion": 1,
+            "label": "mutation",
+            "message": f"{score:.1f}%",
+            "color": color(score)
+          }
+          os.makedirs("badges", exist_ok=True)
+          with open("badges/mutation.json", "w") as f:
+              json.dump(data, f)
+          print(data)
+          PY
+
+      - name: Commit badge endpoint
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(ci): update PIT mutation badge"
+          file_pattern: badges/mutation.json
+
 
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
