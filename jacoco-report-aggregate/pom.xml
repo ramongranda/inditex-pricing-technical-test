@@ -1,7 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>com.inditex.pricing</groupId>
     <artifactId>inditex-pricing-technical-test</artifactId>
@@ -11,12 +12,41 @@
 
   <artifactId>jacoco-report-aggregate</artifactId>
   <packaging>pom</packaging>
-  <name>jacoco-report-aggregate</name>
+  <description>Module to aggregate JaCoCo code coverage reports from multiple submodules.</description>
+
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
-  <!-- OJO: este módulo no necesita <dependencies> si ya depende del padre que lista los submódulos -->
+  <dependencies>
+    <!-- Modules -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>inditex-pricing-application</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>inditex-pricing-domain</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>inditex-pricing-rest-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>inditex-pricing-infrastructure</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>inditex-pricing-boot</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -24,25 +54,15 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>aggregate-report</id>
-            <phase>verify</phase>
+            <id>report-aggregate</id>
+            <phase>test</phase>
             <goals>
               <goal>report-aggregate</goal>
             </goals>
-            <configuration>
-              <!-- Genera también XML (por defecto HTML,XML,CSV) -->
-              <formats>
-                <format>HTML</format>
-                <format>XML</format>
-              </formats>
-              <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
-              <includeCurrentProject>false</includeCurrentProject>
-              <!-- Opcional: limitar execs a jacoco*.exec en cada target -->
-              <!-- <dataFileIncludes><dataFileInclude>jacoco*.exec</dataFileInclude></dataFileIncludes> -->
-            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
+
 </project>
