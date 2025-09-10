@@ -7,7 +7,7 @@ on:
     branches: [ "**" ]
 
 permissions:
-  contents: read
+  contents: write        # <-- required to commit the badge
   pull-requests: write
 
 concurrency:
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # útil para blame en Sonar
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -48,6 +48,53 @@ jobs:
       - name: Convert PIT → Sonar generic issues
         run: scripts/pit-to-sonar-json.sh
 
+      # ===== MUTATION badge (Shields endpoint) =====
+      - name: Build mutation badge (Shields endpoint)
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET, json
+          from pathlib import Path
+
+          reports = list(Path(".").rglob("target/pit-reports/**/mutations.xml")) + \
+                    list(Path(".").rglob("target/pit-reports/mutations.xml"))
+
+          killed = survived = nocov = 0
+          for rpt in reports:
+              root = ET.parse(rpt).getroot()
+              for m in root.findall(".//mutation"):
+                  st = (m.get("status") or "").upper()
+                  if st == "KILLED": killed += 1
+                  elif st == "SURVIVED": survived += 1
+                  elif st == "NO_COVERAGE": nocov += 1
+
+          total = killed + survived + nocov
+          score = (100.0 * killed / total) if total else 0.0
+
+          def color(p):
+              return ("red" if p < 40 else
+                      "orange" if p < 60 else
+                      "yellow" if p < 75 else
+                      "yellowgreen" if p < 85 else
+                      "green")
+
+          data = {
+            "schemaVersion": 1,
+            "label": "mutation",
+            "message": f"{score:.1f}%",
+            "color": color(score)
+          }
+          Path("badges").mkdir(exist_ok=True)
+          Path("badges/mutation.json").write_text(json.dumps(data))
+          print(data)
+          PY
+
+      - name: Commit mutation badge
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(ci): update PIT mutation badge"
+          file_pattern: badges/mutation.json
+
+      # (Optional) upload PIT HTML reports as artifact
       - name: Upload PIT HTML reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,66 +103,16 @@ jobs:
           path: "**/target/pit-reports/**"
           if-no-files-found: ignore
 
-      - name: Build mutation badge (Shields endpoint)
-        run: |
-          python - <<'PY'
-          import xml.etree.ElementTree as ET, json, os, math
-          from pathlib import Path
-          
-          # Busca el primer mutations.xml (ajústalo si quieres agregación)
-          reports = list(Path(".").rglob("target/pit-reports/**/mutations.xml")) + \
-                    list(Path(".").rglob("target/pit-reports/mutations.xml"))
-          if not reports:
-              score = 0.0
-          else:
-              killed = survived = nocov = 0
-              for rpt in reports:
-                  root = ET.parse(rpt).getroot()
-                  for m in root.findall(".//mutation"):
-                      st = (m.get("status") or "").upper()
-                      if st == "KILLED": killed += 1
-                      elif st == "SURVIVED": survived += 1
-                      elif st == "NO_COVERAGE": nocov += 1
-              total = killed + survived + nocov
-              score = (100.0 * killed / total) if total else 0.0
-          
-          # Colores por umbrales
-          def color(p):
-              return ("red" if p < 40 else
-                      "orange" if p < 60 else
-                      "yellow" if p < 75 else
-                      "yellowgreen" if p < 85 else
-                      "green")
-          
-          data = {
-            "schemaVersion": 1,
-            "label": "mutation",
-            "message": f"{score:.1f}%",
-            "color": color(score)
-          }
-          os.makedirs("badges", exist_ok=True)
-          with open("badges/mutation.json", "w") as f:
-              json.dump(data, f)
-          print(data)
-          PY
-
-      - name: Commit badge endpoint
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(ci): update PIT mutation badge"
-          file_pattern: badges/mutation.json
-
-
       - name: SonarCloud Analysis
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
         run: |
           RPT="$(pwd)/jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml"
           echo "RPT=$RPT"
           mvn -B sonar:sonar \
-          -Dsonar.organization="${SONAR_ORG}" \
-          -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
-          -Dsonar.host.url="${SONAR_URL}" \
-          -Dsonar.token="${SONAR_TOKEN}" \
-          -Dsonar.coverage.jacoco.xmlReportPaths="$RPT" \
-          -Dsonar.verbose=true
-
+            -Dsonar.organization="${SONAR_ORG}" \
+            -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
+            -Dsonar.host.url="${SONAR_URL}" \
+            -Dsonar.token="${SONAR_TOKEN}" \
+            -Dsonar.coverage.jacoco.xmlReportPaths="$RPT" \
+            -Dsonar.externalIssuesReportPaths="external-issues.json" \
+            -Dsonar.verbose=true
