@@ -107,12 +107,14 @@ jobs:
         if: env.SONAR_TOKEN != '' && (github.event_name == 'push' || github.event_name == 'pull_request')
         run: |
           RPT="$(pwd)/jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml"
+          EXT="$(pwd)/external-issues.json"
           echo "RPT=$RPT"
+          echo "EXT=$EXT"
           mvn -B sonar:sonar \
             -Dsonar.organization="${SONAR_ORG}" \
             -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
             -Dsonar.host.url="${SONAR_URL}" \
             -Dsonar.token="${SONAR_TOKEN}" \
             -Dsonar.coverage.jacoco.xmlReportPaths="$RPT" \
-            -Dsonar.externalIssuesReportPaths="external-issues.json" \
+            -Dsonar.externalIssuesReportPaths="$EXT" \
             -Dsonar.verbose=true
