@@ -25,6 +25,7 @@
     <module>inditex-pricing-api-contract</module>
     <module>inditex-pricing-rest-api</module>
     <module>inditex-pricing-boot</module>
+    <module>jacoco-report-aggregate</module>
   </modules>
 
   <properties>

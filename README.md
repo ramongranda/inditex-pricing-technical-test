@@ -47,7 +47,8 @@ inditex-pricing-technical-test/
  ├─ inditex-pricing-api-contract/      # OpenAPI contract (YAML) + generated *Api, *ApiDelegate, *Vo
  ├─ inditex-pricing-rest-api/          # REST adapter (inbound) – delegates implementation + mappers
  ├─ inditex-pricing-infrastructure/    # Infrastructure adapters (e.g., JPA) [placeholder]
- └─ inditex-pricing-boot/              # Boot module (Spring Boot app + config + DB init scripts)
+ ├─ inditex-pricing-boot/              # Boot module (Spring Boot app + config + DB init scripts)
+ └─ jacoco-report-aggregate/           # Aggregate JaCoCo reports from all modules
 ```
 
 **Flow:** Client → REST (delegate) → Inbound Port (application) ��� Domain → Outbound Port → Infrastructure.

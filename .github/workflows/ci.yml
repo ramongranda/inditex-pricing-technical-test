@@ -37,7 +37,7 @@ jobs:
           cache: maven
 
       - name: Build reactor (compile + test)
-        run: mvn -B -fae clean verify jacoco:report-aggregate
+        run: mvn -B -fae clean verify
 
       - name: Inspect classes & execs
         run: |
