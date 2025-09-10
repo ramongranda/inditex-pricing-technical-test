@@ -393,12 +393,6 @@
             <goals><goal>prepare-agent-integration</goal></goals>
             <configuration><propertyName>failsafeArgLine</propertyName></configuration>
           </execution>
-          <execution>
-            <id>report-aggregate</id>
-            <phase>verify</phase>
-            <goals><goal>report-aggregate</goal></goals>
-            <inherited>false</inherited>
-          </execution>
         </executions>
       </plugin>
 
