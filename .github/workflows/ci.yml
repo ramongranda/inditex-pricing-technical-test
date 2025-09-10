@@ -63,6 +63,6 @@ jobs:
           -Dsonar.projectKey="${SONAR_PROJECT_KEY}" \
           -Dsonar.host.url="${SONAR_URL}" \
           -Dsonar.token="${SONAR_TOKEN}" \
-          -Dsonar.coverage.jacoco.xmlReportPaths="$RPTS" \
+          -Dsonar.coverage.jacoco.xmlReportPaths="$RPT" \
           -Dsonar.verbose=true
 
