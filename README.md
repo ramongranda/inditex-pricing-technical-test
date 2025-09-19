@@ -6,12 +6,138 @@
 
 ---
 
-## âš¡ TL;DR
+## TL;DR
 
 ```bash
 # Build
 mvn -q -DskipTests package
 
+# Run
+mvn -pl inditex-pricing-boot -am spring-boot:run
+# Swagger UI: http://localhost:8080/openapi/ui
+# API docs:   http://localhost:8080/openapi/api-docs
+```
+
+**Sample request**
+```bash
+curl "http://localhost:8080/prices?applicationDate=2020-06-14T10:00:00Z&productId=35455&brandId=1" -s | jq
+```
+
+**Sample response**
+```json
+{
+  "productId": 35455,
+  "brandId": 1,
+  "priceList": 1,
+  "startDate": "2020-06-14T00:00:00Z",
+  "endDate": "2020-12-31T23:59:59Z",
+  "price": 35.50,
+  "curr": "EUR"
+}
+```
+
+---
+
+## Architecture
+
+Hexagonal architecture (ports & adapters):
+
+```
+Client -> REST (delegate) -> Use Case (inbound port) -> Domain
+                                    |
+                              Repository (outbound port) -> Infrastructure (DB)
+```
+
+- Contract-first with `openapi.yaml` (generates `*Api`, `*ApiDelegate`, `*Vo`)
+- H2 database in MariaDB compatibility mode using `schema.sql` and `data.sql`
+- Reproducible persistence for local execution and tests
+- Business logic: price calculation applying time windows + priority
+
+---
+
+## Modules
+
+- inditex-pricing-domain: domain entities and logic
+- inditex-pricing-application: use cases
+- inditex-pricing-infrastructure: adapters (DB, REST)
+- inditex-pricing-api-contract: OpenAPI definition
+- inditex-pricing-rest-api: REST layer (delegates)
+- inditex-pricing-boot: Spring Boot startup
+
+---
+
+## Tests
+
+- Unit tests (JUnit5 + Mockito)
+- Integration tests with MockMvc and H2
+- End-to-End tests with Postman/Newman
+
+Testing pyramid + PIT mutation coverage for robustness.
+
+```bash
+# Unit tests + mutation
+mvn test org.pitest:pitest-maven:mutationCoverage
+
+# E2E
+newman run postman/collection.json -e postman/environment.json
+```
+
+---
+
+## Docker
+
+```bash
+docker compose up --build
+# Application available at http://localhost:8080
+```
+
+---
+
+## CI/CD with GitHub Actions
+
+The project integrates GitHub Actions for:
+- Build and run tests
+- Generate coverage reports with JaCoCo
+- Run mutation testing with PIT
+- Analyze code quality with SonarCloud
+- Build Docker image and simulate production deployment
+
+Pipeline example:  
+.github/workflows/maven.yml
+
+---
+
+## Key design decisions
+
+- Contract-first with OpenAPI for strong typing
+- H2 in MariaDB mode for portability
+- Price selection based on time window + priority
+- Layered testing with JaCoCo + PIT + Newman
+- Composite index on (brand_id, product_id, start_date, end_date) for query optimization
+
+---
+
+## Production-like deployment
+
+Deployment is done with Docker Compose, bringing up the service with the same dependencies as in a real environment.  
+Ensures reproducibility and consistency.
+
+```bash
+docker compose up --build -d
+# Healthcheck
+curl http://localhost:8080/actuator/health
+```
+
+---
+
+## Future improvements
+
+- Real DB persistence (Postgres/MySQL)
+- Bulk price management and pagination
+- Security with JWT
+- Observability (structured logs, metrics, tracing)
+
+---
 # Run
 mvn -pl inditex-pricing-boot -am spring-boot:run
 # Swagger UI: http://localhost:8080/openapi/ui
